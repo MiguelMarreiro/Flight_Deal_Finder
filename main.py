@@ -54,5 +54,5 @@ for index in range(0, len(target_data)):
 print(target_data)
 
 # -------------------------------GETTING FlightPrices-------------------------------
-# flight_search = FlightSearch(token=AMADEUS_TOKEN, origin=ORIGIN_CITY, target_data=target_data,
-#                              notification_manager=notification_manager)
+flight_search = FlightSearch(token=AMADEUS_TOKEN, origin=ORIGIN_CITY, target_data=target_data,
+                             notification_manager=notification_manager)
