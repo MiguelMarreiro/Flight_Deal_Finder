@@ -9,25 +9,32 @@ from notification_manager import NotificationManager
 
 ORIGIN_CITY = "LIS"
 notification_manager = NotificationManager()
-
+with open("secrets.txt", "r") as file:
+    AMADEUS_TOKEN = file.readline()
+print(AMADEUS_TOKEN)
 # -------------------------------GETTING TOKEN-------------------------------
-AMADEUS_KEY = os.environ["AMADEUS_KEY"]
-AMADEUS_SECRET = os.environ["AMADEUS_SECRET"]
-AMADEUS_TOKEN = ""
+try:
+    test = FlightData(AMADEUS_TOKEN, "PAR")
+except requests.exceptions.HTTPError:
+    AMADEUS_KEY = os.environ["AMADEUS_KEY"]
+    AMADEUS_SECRET = os.environ["AMADEUS_SECRET"]
 
-oauth_url = "https://test.api.amadeus.com/v1/security/oauth2/token"
-header = {
-    "Content-Type": "application/x-www-form-urlencoded"
-}
-data = {
-    "grant_type": "client_credentials",
-    "client_id": AMADEUS_KEY,
-    "client_secret": AMADEUS_SECRET,
-}
+    oauth_url = "https://test.api.amadeus.com/v1/security/oauth2/token"
+    header = {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+    data = {
+        "grant_type": "client_credentials",
+        "client_id": AMADEUS_KEY,
+        "client_secret": AMADEUS_SECRET,
+    }
 
-response = requests.post(url=oauth_url, headers=header, data=data)
-response.raise_for_status()
-AMADEUS_TOKEN = response.json()["access_token"]
+    response = requests.post(url=oauth_url, headers=header, data=data)
+    response.raise_for_status()
+    AMADEUS_TOKEN = response.json()["access_token"]
+
+with open("secrets.txt", "w") as file:
+    file.write(AMADEUS_TOKEN)
 
 # -------------------------------GETTING SheetData-------------------------------
 # data_manager = DataManager()
@@ -47,5 +54,5 @@ for index in range(0, len(target_data)):
 print(target_data)
 
 # -------------------------------GETTING FlightPrices-------------------------------
-flight_search = FlightSearch(token=AMADEUS_TOKEN, origin=ORIGIN_CITY, target_data=target_data,
-                             notification_manager=notification_manager)
+# flight_search = FlightSearch(token=AMADEUS_TOKEN, origin=ORIGIN_CITY, target_data=target_data,
+#                              notification_manager=notification_manager)

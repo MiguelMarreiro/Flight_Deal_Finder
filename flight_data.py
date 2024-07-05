@@ -15,7 +15,7 @@ class FlightData:
             params = {
                 "keyword": keyword,
             }
-            response = requests.get(url=AMADEUS_ENDPOINT+"/reference-data/locations/cities",
+            self.response = requests.get(url=AMADEUS_ENDPOINT+"/reference-data/locations/cities",
                                     headers=header, params=params)
-            response.raise_for_status()
-            self.city_codes.append(response.json()["data"][0]["iataCode"])
+            self.response.raise_for_status()
+            self.city_codes.append(self.response.json()["data"][0]["iataCode"])
