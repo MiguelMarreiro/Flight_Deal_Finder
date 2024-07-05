@@ -1,6 +1,8 @@
-#This file will need to use the DataManager,FlightSearch, FlightData, NotificationManager classes to achieve the program requirements.
+# This file will need to use the DataManager,FlightSearch, FlightData,
+# NotificationManager classes to achieve the program requirements.
 import os
 import requests
+from data_manager import DataManager
 from flight_data import FlightData
 from flight_search import FlightSearch
 
@@ -25,11 +27,13 @@ response = requests.post(url=oauth_url, headers=header, data=data)
 response.raise_for_status()
 AMADEUS_TOKEN = response.json()["access_token"]
 
+# -------------------------------GETTING SheetData-------------------------------
+
+data_manager = DataManager()
+print(data_manager.data)
 # -------------------------------GETTING FlightData-------------------------------
 flight_data = FlightData(AMADEUS_TOKEN)
 destination_codes = flight_data.city_codes
-
-
 
 # -------------------------------GETTING FlightPrices-------------------------------
 flight_search = FlightSearch(token=AMADEUS_TOKEN, origin=ORIGIN_CITY, destinations=destination_codes)
