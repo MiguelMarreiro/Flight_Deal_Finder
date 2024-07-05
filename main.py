@@ -28,12 +28,21 @@ response.raise_for_status()
 AMADEUS_TOKEN = response.json()["access_token"]
 
 # -------------------------------GETTING SheetData-------------------------------
-
-data_manager = DataManager()
-print(data_manager.data)
+# data_manager = DataManager()
+# print(data_manager.data)
+sheet_data = [{'city': 'Paris', 'iataCode': 'PAR', 'lowestPrice': 200, 'id': 2},
+              {'city': 'Frankfurt', 'iataCode': 'FRA', 'lowestPrice': 300, 'id': 3}]
 # -------------------------------GETTING FlightData-------------------------------
-flight_data = FlightData(AMADEUS_TOKEN)
+target_data = [[row["city"], row["lowestPrice"]] for row in sheet_data]
+destinations = [row[0] for row in target_data]
+flight_data = FlightData(AMADEUS_TOKEN, destinations)
 destination_codes = flight_data.city_codes
+print(destination_codes)
+
+for index in range(0, len(target_data)):
+    target_data[index][0] = destination_codes[index]
+
+print(target_data)
 
 # -------------------------------GETTING FlightPrices-------------------------------
-flight_search = FlightSearch(token=AMADEUS_TOKEN, origin=ORIGIN_CITY, destinations=destination_codes)
+flight_search = FlightSearch(token=AMADEUS_TOKEN, origin=ORIGIN_CITY, target_data=target_data)

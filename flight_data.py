@@ -5,8 +5,7 @@ AMADEUS_ENDPOINT = "https://test.api.amadeus.com/v1"
 
 
 class FlightData:
-    def __init__(self, token):
-        keywords = ["Paris", "Frankfurt"]
+    def __init__(self, token, keywords):
         #This class is responsible for structuring the flight data.
         header = {
             "Authorization": "Bearer " + token

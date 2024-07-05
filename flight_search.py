@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 class FlightSearch:
     #This class is responsible for talking to the Flight Search API.
-    def __init__(self, token, origin, destinations):
+    def __init__(self, token, origin, target_data):
         header = {
             "Authorization": "Bearer " + token
         }
@@ -12,7 +12,9 @@ class FlightSearch:
 
         date = datetime.now()
 
-        for destination in destinations:
+        for row in target_data:
+            destination = row[0]
+            lowest_price = row[1]
             for _ in range(3):
 
                 params = {
@@ -26,8 +28,10 @@ class FlightSearch:
                 response = requests.get(url=url, headers=header, params=params)
                 response.raise_for_status()
                 data = response.json()["data"][0]
-                print(date.strftime('%Y-%m-%d'))
-                print(origin + "-" + destination)
-                print(data["price"]["total"] + "€")
+                if float(data["price"]["total"]) < lowest_price:
+                    print("SEND MESSAGE")
+                    print(date.strftime('%Y-%m-%d'), data["itineraries"][0]["segments"][0]["departure"]["at"])
+                    print(origin + "-" + destination)
+                    print(data["price"]["total"] + "€")
 
                 date += timedelta(days=1)
