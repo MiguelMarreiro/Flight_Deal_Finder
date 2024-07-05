@@ -5,8 +5,10 @@ import requests
 from data_manager import DataManager
 from flight_data import FlightData
 from flight_search import FlightSearch
+from notification_manager import NotificationManager
 
 ORIGIN_CITY = "LIS"
+notification_manager = NotificationManager()
 
 # -------------------------------GETTING TOKEN-------------------------------
 AMADEUS_KEY = os.environ["AMADEUS_KEY"]
@@ -45,4 +47,5 @@ for index in range(0, len(target_data)):
 print(target_data)
 
 # -------------------------------GETTING FlightPrices-------------------------------
-flight_search = FlightSearch(token=AMADEUS_TOKEN, origin=ORIGIN_CITY, target_data=target_data)
+flight_search = FlightSearch(token=AMADEUS_TOKEN, origin=ORIGIN_CITY, target_data=target_data,
+                             notification_manager=notification_manager)

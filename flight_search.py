@@ -1,9 +1,11 @@
 import requests
 from datetime import datetime, timedelta
+from notification_manager import NotificationManager
+
 
 class FlightSearch:
     #This class is responsible for talking to the Flight Search API.
-    def __init__(self, token, origin, target_data):
+    def __init__(self, token, origin, target_data, notification_manager):
         header = {
             "Authorization": "Bearer " + token
         }
@@ -29,9 +31,15 @@ class FlightSearch:
                 response.raise_for_status()
                 data = response.json()["data"][0]
                 if float(data["price"]["total"]) < lowest_price:
-                    print("SEND MESSAGE")
-                    print(date.strftime('%Y-%m-%d'), data["itineraries"][0]["segments"][0]["departure"]["at"])
-                    print(origin + "-" + destination)
-                    print(data["price"]["total"] + "€")
+
+
+                    body = (f"Price alert!\n"
+                            f"Itinerary: {origin + "-" + destination}\n"
+                            f"Date: {date.strftime('%Y-%m-%d'),
+                            data["itineraries"][0]["segments"][0]["departure"]["at"]}\n"
+                            f"Price: {data["price"]["total"] + "€"}")
+
+                    print(body)
+                    notification_manager.send_notification(body)
 
                 date += timedelta(days=1)
